@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myapp">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="js/lib/angular/angular.js"></script>
+</head>
+<body ng-controller="MainCtrl as mainctrl">
+{{mainctrl.formObj}}
+<form name="myform">
+    姓名：<input type="text" name="name" required ng-model="mainctrl.formObj.name"><span ng-show="myform.name.$error.required"> 请填写用户名</span>
+</form>
+
+<script>
+    let myapp = angular.module("myapp", []);
+    myapp.controller("MainCtrl", function(){
+        this.formObj = {};
+    })
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myapp">
+<head>
+    <meta charset="UTF-8">
+    <title>模拟表格</title>
+    <style type="text/css">
+        .table{
+            width: 420px;
+            margin: 20px;
+        }
+        table, tr, th, td{
+            border-bottom: 1px solid #333;
+            border-collapse: collapse;
+        }
+        td,th{
+            width: 20%;
+            line-height: 150%;
+            text-align: center;
+        }
+        th{
+            cursor: pointer;
+        }
+        tr:nth-child(2n){
+            background-color: #eee;
+        }
+
+        .form_wrap{
+            display: block;
+            background-color: darkcyan;
+            width: 300px;
+            height: 250px;
+            padding: 10px;
+            margin: 20px;
+        }
+
+        .data_wrap{
+            padding: 10px;
+            margin: 10px;
+        }
+    </style>
+    <script type="text/javascript" src="js/lib/angular/angular.js"></script>
+</head>
+<body ng-controller="MainCtrl as mainctrl">
+
+    <div class="table_wrap">
+        <table class="table">
+            <tr>
+                <th ng-click="mainctrl.sortClick('id')"  >学号 <span ng-show="mainctrl.sortByChk('id')"  >{{mainctrl.sortSign()}}</span></th>
+                <th ng-click="mainctrl.sortClick('name')">姓名 <span ng-show="mainctrl.sortByChk('name')">{{mainctrl.sortSign()}}</span></th>
+                <th ng-click="mainctrl.sortClick('lang')">语文 <span ng-show="mainctrl.sortByChk('lang')">{{mainctrl.sortSign()}}</span></th>
+                <th ng-click="mainctrl.sortClick('math')">数学 <span ng-show="mainctrl.sortByChk('math')">{{mainctrl.sortSign()}}</span></th>
+                <th ng-click="mainctrl.sortClick('en')"  >英语 <span ng-show="mainctrl.sortByChk('en')"  >{{mainctrl.sortSign()}}</span></th>
+                <th>删除</th>
+            </tr>
+            <tr ng-repeat="item in mainctrl.data">
+                <td>{{item.id}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.lang}}</td>
+                <td>{{item.math}}</td>
+                <td>{{item.en}}</td>
+                <td><input type="button" value="删除" ng-click="mainctrl.remove(item.id)"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="form_wrap">
+        <p><span>学号：</span><input type="text" ng-model="mainctrl.formObj.id"></p>
+        <p><span>姓名：</span><input type="text" ng-model="mainctrl.formObj.name"></p>
+        <p><span>语文：</span><input type="text" ng-model="mainctrl.formObj.lang"></p>
+        <p><span>数学：</span><input type="text" ng-model="mainctrl.formObj.math"></p>
+        <p><span>英语：</span><input type="text" ng-model="mainctrl.formObj.en"></p>
+        <p>
+            <input type="button" value="添加" ng-click="mainctrl.add()">
+            <input type="button" value="清空" ng-click="mainctrl.reset()">
+        </p>
+    </div>
+
+    <div class="data_wrap">
+        <textArea rows="10" cols="60">{{mainctrl.formObj}}</textArea>
+    </div>
+
+    <script type="text/javascript">
+        myapp = angular.module("myapp", []);
+        myapp.controller("MainCtrl", function(){
+            let self = this;
+            self.formObj = {};
+            self.data = [
+               {"id":"1001", "name":"小红", "lang":"90", "math":"91", "en":"92"},
+               {"id":"1002", "name":"小明", "lang":"92", "math":"97", "en":"80"},
+               {"id":"1003", "name":"小黄", "lang":"94", "math":"96", "en":"85"},
+            ]
+
+            self.add = function(){
+                self.data.push(self.formObj);
+                self.formObj = {};
+            }
+
+            self.reset = function(){
+                self.formObj = {};
+            }
+
+            self.remove = function(id){
+                for(let i=0; i<self.data.length; i++){
+                    if(self.data[i].id == id){
+                        self.data.splice(i,1);
+                    }
+                }
+            }
+
+            self.checkFormObj = function(){
+            }
+
+            self.sortByCol = "id";
+            self.sortASC = true;
+
+            self.sortByChk = function(colName){
+                return colName == self.sortByCol;
+            }
+
+            self.sortClick = function(colName){
+                if(self.sortByCol == colName){
+                    self.sortASC = !self.sortASC;
+                } else {
+                    self.sortByCol = colName;
+                    self.sortASC = true;
+                }
+
+                self.data.sort(function(a,b){
+                    if(self.sortASC){
+                        return a[self.sortByCol] > b[self.sortByCol] ? 1 : -1;
+                    } else {
+                        return a[self.sortByCol] > b[self.sortByCol] ? -1 : 1;
+                    }
+
+                });
+            }
+
+            self.sortSign = function(){
+                return self.sortASC ? "↓" : "↑";
+            }
+
+        });
+
+
+    </script>
+
+
+</body>
+</html>
